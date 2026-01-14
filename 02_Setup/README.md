@@ -1,7 +1,8 @@
 # Setup Instructions
 
 1. first do a `sudo apt update && sudo apt upgrade -y && sudo apt autoremove` then pop over to [downloads](https://developer.nvidia.com/cuda-downloads)
-2. fill in the following settings that match the device you'll be doing this course on: Operating System
+2. fill in the following settings that match the device you'll be doing this course on:    
+   - Operating System
    - Architecture
    - Distribution
    - Version

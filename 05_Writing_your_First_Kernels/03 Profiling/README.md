@@ -3,7 +3,7 @@
 ## Follow along
 1. 
 ```bash
-nvcc -o 00 00\ nvtx_matmul.cu -lnvToolsExt
+nvcc -o 00 00_nvtx_matmul.cu -lnvToolsExt
 nsys profile --stats=true ./00
 ```
 

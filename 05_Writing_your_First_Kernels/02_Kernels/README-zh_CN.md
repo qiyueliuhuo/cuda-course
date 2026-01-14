@@ -38,7 +38,7 @@ int blockDim = 32; // 每个block 32个线程
 
 ## 线程同步
 
-- `cudaDeviceSynchronize();` ⇒ 确保一个问题的所有内核都执行完毕，这样你就可以安全地开始下一个。可以把它看作一个屏障（barrier）。在 `int main()` 或其他非`__global__`函数中调用。
+- `cudaDeviceSynchronize();` ⇒ 确保一个问题的所有内核都已完成执行，这样你就可以安全地开始下一个任务。可以将其视为一个屏障（barrier）。此函数应在 `int main()` 或其他**非** `__global__` 函数中调用。
 
 - `__syncthreads();` 用于在内核内部设置线程执行的屏障。如果你在操作同一块内存，并且需要所有其他线程都赶上进度后再对某个位置进行修改时很有用。例如：某个线程可能还在处理一块内存，另一个线程已经完成了该任务。如果这个更快的线程修改了慢线程还需要的数据，就会导致数值不稳定和错误。
 
@@ -55,18 +55,17 @@ int blockDim = 32; // 每个block 32个线程
 
 ## 线程安全
 
-- [CUDA 是线程安全的吗？](https://forums.developer.nvidia.com/t/is-cuda-thread-safe/2262/2)
+### [CUDA 是线程安全的吗？](https://forums.developer.nvidia.com/t/is-cuda-thread-safe/2262/2)
+
 - 当一段代码是“线程安全”的，意味着它可以被多个线程同时运行，而不会导致竞态条件或其他意外行为。
 
-- 竞态条件是指一个线程在另一个线程完成之前就开始了下一个任务。
-	为了防止竞态条件，我们使用 `cudaDeviceSynchronize()` 这样的特殊函数，确保所有线程都赶上进度后再给它们新的指令。
-	可以想象一群线程在赛跑，有些线程先到终点，你需要手动让这些“赢家”线程在终点等慢的线程。
+- 竞态条件是指一个线程在另一个线程完成之前就开始了下一个任务。为了防止竞态条件，我们使用 `cudaDeviceSynchronize()` 这样的特殊函数，确保所有线程都赶上进度后再给它们新的指令。可以想象一群线程在赛跑，有些线程先到终点，你需要手动让这些“赢家”线程在终点等慢的线程。
 
 - 如果你想了解如何用不同的CPU线程调用多个GPU内核，请参考上面的链接。
 
 ## SIMD/SIMT（单指令多线程）
 
-- [CUDA 可以使用SIMD指令吗？](https://stackoverflow.com/questions/5238743/can-cuda-use-simd-extensions)
+### [CUDA 可以使用SIMD指令吗？](https://stackoverflow.com/questions/5238743/can-cuda-use-simd-extensions)
 - 类似于CPU的SIMD（单指令多数据），GPU上有单指令多线程（SIMT）。
 - 与其让for循环顺序执行，不如让每个线程执行for循环的一次迭代，这样看起来只需要一次迭代的时间。如果迭代次数增加，执行时间会线性增长（因为并行核心数量有限）。
 - 比CPU更简单：
@@ -76,7 +75,7 @@ int blockDim = 32; // 每个block 32个线程
 
 > 本课程后面（矩阵乘法优化章节）会回到与这些特殊warp操作相关的优化。[Warp级原语](https://developer.nvidia.com/blog/using-cuda-warp-level-primitives/)
 
-- https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#thread-hierarchy 指出：“每个block的线程数是有限制的，因为所有block内的线程都要驻留在同一个流多处理器（SM）上，并且必须共享该核心有限的内存资源。在当前GPU上，一个线程块最多可以包含1024个线程。” 这意味着每个block理论上最多1024个线程，每个warp 32个线程，每个block 32个warp。
+- https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#thread-hierarchy 指出：“每个block的线程数是有限制的，因为所有block内的线程都要驻留在同一个流多处理器（SM）上，并且必须共享该核心有限的内存资源。**在当前GPU上，一个线程块最多可以包含1024个线程。” 这意味着每个block理论上最多1024个线程，每个warp 32个线程，每个block 32个warp。**
 
 ## 数学内建函数（Math intrinsics）
 - 设备端专用的硬件数学指令

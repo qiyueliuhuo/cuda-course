@@ -54,19 +54,13 @@ int blockDim = 32; // 32 threads per block
 
 ## Thread Safety
 
-- [Is CUDA thread-safe?](https://forums.developer.nvidia.com/t/is-cuda-thread-safe/2262/2)
-- when a piece of code is “thread-safe” it can be run by multiple threads at the same time
-  without leading to race conditions or other unexpected behaviour.
+### [Is CUDA thread-safe?](https://forums.developer.nvidia.com/t/is-cuda-thread-safe/2262/2)
 
-- race conditions are where one thread starts the next task before another finishes.
-  to prevent race conditions, we use a special function called `cudaDeviceSynchronize()`
-  to ensure all threads are caught up before giving them a new instruction to work on.
-  think about a bunch of threads racing to the finish line, some finish before others
-  for some reason and you have to manually tell those “winner” threads to wait at the
-  finish line for the laggards.
+- when a piece of code is “thread-safe” it can be run by multiple threads at the same time without leading to race conditions or other unexpected behaviour.
 
-- if you are wondering about calling multiple GPU kernels with different CPU threads,
-  refer to the link above.
+- race conditions are where one thread starts the next task before another finishes. To prevent race conditions, we use a special function called `cudaDeviceSynchronize()`. To ensure all threads are caught up before giving them a new instruction to work on. Think about a bunch of threads racing to the finish line, some finish before others. For some reason and you have to manually tell those “winner” threads to wait at the finish line for the laggards.
+
+- if you are wondering about calling multiple GPU kernels with different CPU threads, refer to the link above.
 
 ## SIMD/SIMT (Single Instruction, Multiple Threads)
 

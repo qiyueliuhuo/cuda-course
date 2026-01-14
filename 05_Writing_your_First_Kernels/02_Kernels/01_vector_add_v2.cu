@@ -1,3 +1,37 @@
+/*
+ * Vector Addition v2 - Multi-dimensional Kernel Comparison Version
+ * 
+ * Improvements and differences compared to v1:
+ * 1. Implements both 1D and 3D kernel versions to compare performance across different dimension configurations
+ * 2. Increased performance test iterations (100 vs 20) for higher accuracy
+ * 3. Separately verifies 1D and 3D kernel correctness for independent debugging
+ * 4. Demonstrates 3D index calculation: idx = i + j * nx + k * nx * ny
+ * 5. Uses cudaMemset to zero out result arrays, avoiding data contamination from previous runs
+ * 6. Introduces different block size configurations (1D: 1024 threads, 3D: 16x8x8=2048 threads)
+ * 
+ * Advantages:
+ * - More comprehensive performance comparison analysis (CPU vs GPU 1D vs GPU 3D)
+ * - Demonstrates how to map 1D problems to 3D grids, understanding multi-dimensional indexing
+ * - More rigorous testing methodology with more reliable results
+ */
+
+/*
+ * Vector Addition v2 - 多维度内核对比版本
+ * 
+ * 相比 v1 的改进和区别：
+ * 1. 实现了 1D 和 3D 两种内核版本，用于对比不同维度配置的性能差异
+ * 2. 增加了更多的性能测试迭代次数（100次 vs 20次），提高测试准确性
+ * 3. 分别验证 1D 和 3D 内核的正确性，便于独立调试
+ * 4. 展示了 3D 索引计算方法：idx = i + j * nx + k * nx * ny
+ * 5. 使用 cudaMemset 清零结果数组，避免前一次运行的数据干扰
+ * 6. 引入了不同的 block size 配置（1D: 1024 线程, 3D: 16x8x8=2048 线程）
+ * 
+ * 优势：
+ * - 更全面的性能对比分析（CPU vs GPU 1D vs GPU 3D）
+ * - 演示了如何将 1D 问题映射到 3D 网格，理解多维索引
+ * - 更严格的测试方法，结果更可靠
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>

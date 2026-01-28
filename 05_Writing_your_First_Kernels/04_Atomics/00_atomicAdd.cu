@@ -6,11 +6,18 @@
 
 // Kernel without atomics (incorrect)
 __global__ void incrementCounterNonAtomic(int* counter) {
+    // 1. 
     // not locked
     int old = *counter;
     int new_value = old + 1;
     // not unlocked
     *counter = new_value;
+
+    // 2.
+    // *counter = *counter + 1;
+
+    // 3. 
+    // (*counter)++;
 }
 
 // Kernel with atomics (correct)

@@ -170,14 +170,146 @@ SKIPPED: report1.sqlite could not be analyzed because it does not contain the re
 > .sqlite 文件可以直接导入 sqlite 数据库进行更自定义的分析
 2. 
 ```bash
-nvcc -o 01 01_naive_matmul.cu`
+nvcc -o 01 01_naive_matmul.cu
 nsys profile --stats=true ./01
 ```
+
+```bash
+> sudo nsys profile --stats=true ./01
+Collecting data...
+Generating '/tmp/nsys-report-a7b0.qdstrm'
+[1/8] [========================100%] report1.nsys-rep
+[2/8] [========================100%] report1.sqlite
+[3/8] Executing 'nvtx_sum' stats report
+SKIPPED: /home/andy/Workplace/projects/cuda-course/05_Writing_your_First_Kernels/03_Profiling/report1.sqlite does not contain NV Tools Extension (NVTX) data.
+[4/8] Executing 'osrt_sum' stats report
+
+ Time (%)  Total Time (ns)  Num Calls    Avg (ns)     Med (ns)    Min (ns)   Max (ns)    StdDev (ns)            Name         
+ --------  ---------------  ---------  ------------  -----------  --------  -----------  ------------  ----------------------
+     73.3      300,103,279         11  27,282,116.3  9,914,856.0   269,765  199,732,574  58,392,509.4  poll                  
+     26.0      106,442,210        460     231,396.1      8,925.0     1,098   11,849,069     777,808.1  ioctl                 
+      0.3        1,378,097         25      55,123.9      7,415.0     6,802      906,084     178,917.9  mmap64                
+      0.2          739,545          9      82,171.7     58,944.0    30,016      273,553      72,914.5  sem_timedwait         
+      0.1          239,305         43       5,565.2      4,552.0     2,571       23,426       3,272.5  open64                
+      0.0          163,927         29       5,652.7      3,634.0     1,179       16,495       4,474.2  fopen                 
+      0.0          126,490          3      42,163.3     44,179.0    32,668       49,643       8,665.2  pthread_create        
+      0.0          125,030         13       9,617.7      5,389.0     1,886       50,701      13,032.0  mmap                  
+      0.0           84,413          1      84,413.0     84,413.0    84,413       84,413           0.0  pthread_cond_wait     
+      0.0           37,121         19       1,953.7      1,592.0     1,088        4,584         946.1  fclose                
+      0.0           36,353          1      36,353.0     36,353.0    36,353       36,353           0.0  fgets                 
+      0.0           35,114          9       3,901.6      2,968.0     1,022        9,751       3,285.7  close                 
+      0.0           23,118          6       3,853.0      3,760.0     1,217        6,696       1,806.4  open                  
+      0.0           22,980          4       5,745.0      4,754.0     2,850       10,622       3,589.3  fread                 
+      0.0           14,668          3       4,889.3      1,910.0     1,240       11,518       5,750.4  fwrite                
+      0.0           14,642         11       1,331.1      1,110.0     1,011        2,377         443.6  read                  
+      0.0           12,486          2       6,243.0      6,243.0     4,590        7,896       2,337.7  socket                
+      0.0           11,215          8       1,401.9      1,359.5     1,052        2,064         353.8  write                 
+      0.0            9,819          3       3,273.0      4,089.0     1,518        4,212       1,521.1  pipe2                 
+      0.0            9,532          3       3,177.3      3,118.0     2,943        3,471         269.0  munmap                
+      0.0            8,311          3       2,770.3      2,743.0     1,750        3,818       1,034.3  fcntl                 
+      0.0            7,399          1       7,399.0      7,399.0     7,399        7,399           0.0  connect               
+      0.0            3,260          2       1,630.0      1,630.0     1,284        1,976         489.3  fflush                
+      0.0            1,550          1       1,550.0      1,550.0     1,550        1,550           0.0  bind                  
+      0.0            1,502          1       1,502.0      1,502.0     1,502        1,502           0.0  pthread_cond_broadcast
+
+[5/8] Executing 'cuda_api_sum' stats report
+
+ Time (%)  Total Time (ns)  Num Calls    Avg (ns)      Med (ns)     Min (ns)    Max (ns)   StdDev (ns)            Name         
+ --------  ---------------  ---------  ------------  ------------  ----------  ----------  ------------  ----------------------
+     84.3       97,391,992          3  32,463,997.3      48,537.0      46,205  97,297,250  56,147,243.8  cudaMalloc            
+     13.1       15,086,180          1  15,086,180.0  15,086,180.0  15,086,180  15,086,180           0.0  cuLibraryLoadData     
+      2.3        2,639,864          1   2,639,864.0   2,639,864.0   2,639,864   2,639,864           0.0  cudaDeviceSynchronize 
+      0.3          359,360          3     119,786.7     122,280.0     111,579     125,501       7,288.2  cudaFree              
+      0.1           79,716          1      79,716.0      79,716.0      79,716      79,716           0.0  cudaLaunchKernel      
+      0.0              717          1         717.0         717.0         717         717           0.0  cuKernelGetName       
+      0.0              526          1         526.0         526.0         526         526           0.0  cuModuleGetLoadingMode
+      0.0              258          1         258.0         258.0         258         258           0.0  cuLibraryGetKernel    
+
+[6/8] Executing 'cuda_gpu_kern_sum' stats report
+
+ Time (%)  Total Time (ns)  Instances   Avg (ns)     Med (ns)    Min (ns)   Max (ns)   StdDev (ns)                            Name                          
+ --------  ---------------  ---------  -----------  -----------  ---------  ---------  -----------  --------------------------------------------------------
+    100.0        2,638,124          1  2,638,124.0  2,638,124.0  2,638,124  2,638,124          0.0  matrixMultiply(float *, float *, float *, int, int, int)
+
+[7/8] Executing 'cuda_gpu_mem_time_sum' stats report
+SKIPPED: /home/andy/Workplace/projects/cuda-course/05_Writing_your_First_Kernels/03_Profiling/report1.sqlite does not contain GPU memory data.
+[8/8] Executing 'cuda_gpu_mem_size_sum' stats report
+SKIPPED: /home/andy/Workplace/projects/cuda-course/05_Writing_your_First_Kernels/03_Profiling/report1.sqlite does not contain GPU memory data.
+Generated:
+        /home/andy/Workplace/projects/cuda-course/05_Writing_your_First_Kernels/03_Profiling/report1.nsys-rep
+        /home/andy/Workplace/projects/cuda-course/05_Writing_your_First_Kernels/03_Profiling/report1.sqlite
+```
+
 
 3. 
 ```bash
 nvcc -o 02 02_tiled_matmul.cu
 nsys profile --stats=true ./02
+```
+
+```bash
+> sudo nsys profile --stats=true ./02
+Collecting data...
+Generating '/tmp/nsys-report-1bef.qdstrm'
+[1/8] [========================100%] report1.nsys-rep
+[2/8] [========================100%] report1.sqlite
+[3/8] Executing 'nvtx_sum' stats report
+SKIPPED: /home/andy/Workplace/projects/cuda-course/05_Writing_your_First_Kernels/03_Profiling/report1.sqlite does not contain NV Tools Extension (NVTX) data.
+[4/8] Executing 'osrt_sum' stats report
+
+ Time (%)  Total Time (ns)  Num Calls    Avg (ns)     Med (ns)    Min (ns)   Max (ns)    StdDev (ns)            Name         
+ --------  ---------------  ---------  ------------  -----------  --------  -----------  ------------  ----------------------
+     72.6      287,028,555         11  26,093,505.0  8,165,760.0   233,639  213,036,338  62,839,640.3  poll                  
+     26.7      105,445,161        460     229,228.6      8,518.5     1,093   12,621,085     807,734.9  ioctl                 
+      0.3        1,350,546         25      54,021.8      8,700.0     5,723      880,946     173,815.8  mmap64                
+      0.1          587,837          9      65,315.2     55,617.0    11,497      216,278      60,219.0  sem_timedwait         
+      0.1          215,478         43       5,011.1      4,188.0     2,372       10,872       1,835.1  open64                
+      0.0          129,169         28       4,613.2      3,297.0     1,014       15,950       3,653.7  fopen                 
+      0.0          127,223          3      42,407.7     41,549.0    32,649       53,025      10,215.1  pthread_create        
+      0.0          124,071         13       9,543.9      5,102.0     1,930       48,062      12,379.8  mmap                  
+      0.0           63,247          1      63,247.0     63,247.0    63,247       63,247           0.0  pthread_cond_wait     
+      0.0           36,071          8       4,508.9      3,022.0     1,241       12,502       3,995.5  close                 
+      0.0           31,965         18       1,775.8      1,443.5     1,001        4,618         905.5  fclose                
+      0.0           27,534          1      27,534.0     27,534.0    27,534       27,534           0.0  fgets                 
+      0.0           21,848          5       4,369.6      2,595.0     1,052       10,848       4,006.6  fread                 
+      0.0           20,642          6       3,440.3      3,327.0     1,085        6,293       1,820.0  open                  
+      0.0           12,734          3       4,244.7      3,627.0     3,157        5,950       1,495.4  munmap                
+      0.0           11,550          7       1,650.0      1,311.0     1,041        2,688         688.5  write                 
+      0.0           11,003          8       1,375.4      1,031.5     1,001        2,354         550.9  read                  
+      0.0            9,961          3       3,320.3      4,044.0     1,459        4,458       1,625.2  pipe2                 
+      0.0            9,257          2       4,628.5      4,628.5     3,618        5,639       1,429.1  socket                
+      0.0            6,432          1       6,432.0      6,432.0     6,432        6,432           0.0  connect               
+      0.0            2,562          1       2,562.0      2,562.0     2,562        2,562           0.0  fcntl                 
+      0.0            2,094          1       2,094.0      2,094.0     2,094        2,094           0.0  fwrite                
+      0.0            1,954          1       1,954.0      1,954.0     1,954        1,954           0.0  bind                  
+      0.0            1,497          1       1,497.0      1,497.0     1,497        1,497           0.0  pthread_cond_broadcast
+
+[5/8] Executing 'cuda_api_sum' stats report
+
+ Time (%)  Total Time (ns)  Num Calls    Avg (ns)     Med (ns)    Min (ns)    Max (ns)   StdDev (ns)            Name         
+ --------  ---------------  ---------  ------------  -----------  ---------  ----------  ------------  ----------------------
+     97.4       94,815,271          3  31,605,090.3     47,144.0     46,725  94,721,402  54,660,329.3  cudaMalloc            
+      2.1        2,001,177          1   2,001,177.0  2,001,177.0  2,001,177   2,001,177           0.0  cudaDeviceSynchronize 
+      0.3          307,669          3     102,556.3    118,765.0     65,066     123,838      32,566.5  cudaFree              
+      0.1          140,497          1     140,497.0    140,497.0    140,497     140,497           0.0  cuLibraryLoadData     
+      0.1           59,709          1      59,709.0     59,709.0     59,709      59,709           0.0  cudaLaunchKernel      
+      0.0              589          1         589.0        589.0        589         589           0.0  cuModuleGetLoadingMode
+      0.0              417          1         417.0        417.0        417         417           0.0  cuLibraryGetKernel    
+      0.0              227          1         227.0        227.0        227         227           0.0  cuKernelGetName       
+
+[6/8] Executing 'cuda_gpu_kern_sum' stats report
+
+ Time (%)  Total Time (ns)  Instances   Avg (ns)     Med (ns)    Min (ns)   Max (ns)   StdDev (ns)                                Name                               
+ --------  ---------------  ---------  -----------  -----------  ---------  ---------  -----------  -----------------------------------------------------------------
+    100.0        2,001,006          1  2,001,006.0  2,001,006.0  2,001,006  2,001,006          0.0  matrixMultiplyOptimized(float *, float *, float *, int, int, int)
+
+[7/8] Executing 'cuda_gpu_mem_time_sum' stats report
+SKIPPED: /home/andy/Workplace/projects/cuda-course/05_Writing_your_First_Kernels/03_Profiling/report1.sqlite does not contain GPU memory data.
+[8/8] Executing 'cuda_gpu_mem_size_sum' stats report
+SKIPPED: /home/andy/Workplace/projects/cuda-course/05_Writing_your_First_Kernels/03_Profiling/report1.sqlite does not contain GPU memory data.
+Generated:
+        /home/andy/Workplace/projects/cuda-course/05_Writing_your_First_Kernels/03_Profiling/report1.nsys-rep
+        /home/andy/Workplace/projects/cuda-course/05_Writing_your_First_Kernels/03_Profiling/report1.sqlite
 ```
 
 ## 命令行工具
